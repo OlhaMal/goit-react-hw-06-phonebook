@@ -1,18 +1,33 @@
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
+import { addContact } from 'redux/contactsSlice';
 import css from './ContactForm.module.css';
+import { toast } from 'react-toastify';
 
-export const ContactForm = ({ handleSubmit }) => {
+export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.contacts);
+
   const handleFormSubmit = evt => {
     evt.preventDefault();
-    const form = evt.currentTarget;
-    handleSubmit({ name, number });
-    form.reset();
-    setName('')
-    setNumber('')
+    if (contacts.find(contact => contact.name === name)) {
+      return toast.warn(`${name} is already in contacts.`, {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    }
+    dispatch(addContact(name, number));
+    setName('');
+    setNumber('');
   };
 
   const handleChange = evt => {
@@ -58,8 +73,4 @@ export const ContactForm = ({ handleSubmit }) => {
       </button>
     </form>
   );
-};
-
-ContactForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
 };
