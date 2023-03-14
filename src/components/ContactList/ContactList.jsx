@@ -21,7 +21,7 @@ export const ContactList = () => {
 
   return (
     <ul className={css.contactList}>
-      {filteredContacts.map((contact) => {
+      {filteredContacts.map(contact => {
         return (
           <li key={nanoid()} className={css.listItem}>
             {contact.name}: {contact.number}
